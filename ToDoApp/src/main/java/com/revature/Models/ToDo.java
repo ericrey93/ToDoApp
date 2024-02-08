@@ -14,8 +14,9 @@ public class ToDo {
     @Column(name = "completed")
     private boolean isCompleted;
 
+
     public int getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(int id) {
@@ -30,5 +31,24 @@ public class ToDo {
         this.content = content;
     }
 
+    public boolean isCompleted() {
+        return isCompleted;
+    }
 
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ToDo toDo = (ToDo) o;
+        return id == toDo.id && isCompleted == toDo.isCompleted && Objects.equals(content, toDo.content);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, content, isCompleted);
+    }
 }
