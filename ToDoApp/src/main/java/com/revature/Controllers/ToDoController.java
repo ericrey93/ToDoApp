@@ -2,18 +2,20 @@ package com.revature.Controllers;
 
 import com.revature.Models.ToDo;
 import com.revature.Services.ToDoServices;
+import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/todo")
+@RequestMapping("")
 public class ToDoController {
 
-    // TODO Dependency Injection for our service class
 
     private ToDoServices tds;
 
@@ -22,31 +24,40 @@ public class ToDoController {
         this.tds = tds;
     }
 
-    // TODO Handler for creating a to do record
-
-    @PostMapping
-    public ToDo createToDoHandler(@RequestBody ToDo todo) {
-        ToDo savedToDoData = tds.createNewToDo(todo);
-        return savedToDoData;
+    @GetMapping("/todos")
+    public ResponseEntity<List<ToDo>> getAllToDos() {
+        List<ToDo> getAllToDos = tds.getAllToDos();
+        return ResponseEntity.status(HttpStatus.OK).body(getAllToDos);
     }
 
-    // TODO Handler for getting a todo record by id
-    @GetMapping("{id}")
-    public ResponseEntity<ToDo> getToDOById(@PathVariable int id) {
-        ToDo returnedToDo;
 
-        try {
-            returnedToDo = tds.getToDOById(id);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+    @PostMapping("/todos")
+    public ResponseEntity<?> createToDoHandler(@RequestBody ToDo todo) {
+        ToDo createToDo = tds.createNewToDo(todo);
+        if(createToDo != null) {
+            return ResponseEntity.status(200).body(createToDo);
+        } else {
+            return ResponseEntity.status(400).build();
         }
 
-        return new ResponseEntity<>(returnedToDo, HttpStatus.OK);
     }
 
-    // TODO Handler for updating todo record
 
-    @PutMapping("{id}")
+    @GetMapping("/todos/{id}")
+    public ResponseEntity<?> getToDoById(@PathVariable int id) {
+        Optional<ToDo> optionalToDo = tds.getToDoById(id);
+        if(optionalToDo.isPresent()) {
+            ToDo todo = optionalToDo.get();
+            return ResponseEntity.status(HttpStatus.OK).body(optionalToDo);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+
+
+    @PutMapping("/todos/{id}")
     public ResponseEntity<ToDo> updateToDoById(@PathVariable int id,@RequestBody ToDo todo) {
         ToDo returnedToDo;
 

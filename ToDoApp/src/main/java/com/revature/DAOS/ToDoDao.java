@@ -11,6 +11,6 @@ public interface ToDoDao extends JpaRepository<ToDo, Integer> {
 
 
 
-    List<ToDo> findAllByCompleted(boolean isCompleted);
+
 
 }

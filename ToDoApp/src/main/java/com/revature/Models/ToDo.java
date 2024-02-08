@@ -5,14 +5,18 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "List")
+@Table(name = "todos")
 public class ToDo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String content;
+    private String text;
     @Column(name = "completed")
     private boolean isCompleted;
+
+    public ToDo() {
+
+    }
 
 
     public int getId() {
@@ -23,12 +27,12 @@ public class ToDo {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public String getText() {
+        return text;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setText(String text) {
+        this.text= text;
     }
 
     public boolean isCompleted() {
@@ -44,11 +48,17 @@ public class ToDo {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ToDo toDo = (ToDo) o;
-        return id == toDo.id && isCompleted == toDo.isCompleted && Objects.equals(content, toDo.content);
+        return id == toDo.id && isCompleted == toDo.isCompleted && Objects.equals(text, toDo.text);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(id, content, isCompleted);
+    public String toString() {
+        return "ToDo{" +
+                "id=" + id +
+                ", text='" + text + '\'' +
+                ", isCompleted=" + isCompleted +
+                '}';
     }
+
+
 }
