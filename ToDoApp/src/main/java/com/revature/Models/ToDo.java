@@ -10,7 +10,11 @@ public class ToDo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "text")
     private String text;
+
+    @Column(name = "user")
+    private Integer user;
     @Column(name = "completed")
     private boolean isCompleted;
 
@@ -33,6 +37,14 @@ public class ToDo {
 
     public void setText(String text) {
         this.text= text;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
     public boolean isCompleted() {

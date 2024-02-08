@@ -43,5 +43,16 @@ public class ToDoServices {
         return tdd.save(returnedToDo);
     }
 
+    public ToDo deleteToDoById(int id) {
+        Optional<ToDo> optionalToDo = tdd.findById(id);
+        if(optionalToDo.isPresent()) {
+            ToDo todo  = optionalToDo.get();
+            tdd.deleteById(id);
+            return todo;
+        } else {
+            return null;
+        }
+    }
+
 
 }
