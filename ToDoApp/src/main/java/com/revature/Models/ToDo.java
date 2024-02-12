@@ -8,18 +8,23 @@ import java.util.Objects;
 @Table(name = "todos")
 public class ToDo {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     @Column(name = "text")
     private String text;
 
-    @Column(name = "user")
-    private Integer user;
+
     @Column(name = "completed")
     private boolean isCompleted;
 
     public ToDo() {
 
+    }
+
+    public ToDo(int id, String text, boolean isCompleted) {
+        this.id = id;
+        this.text = text;
+        this.isCompleted = isCompleted;
     }
 
 
@@ -36,32 +41,20 @@ public class ToDo {
     }
 
     public void setText(String text) {
-        this.text= text;
+        this.text = text;
     }
 
-    public String getUser() {
-        return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
-    }
 
     public boolean isCompleted() {
+
         return isCompleted;
     }
 
     public void setCompleted(boolean completed) {
+
         isCompleted = completed;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ToDo toDo = (ToDo) o;
-        return id == toDo.id && isCompleted == toDo.isCompleted && Objects.equals(text, toDo.text);
-    }
 
     @Override
     public String toString() {
@@ -72,5 +65,13 @@ public class ToDo {
                 '}';
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ToDo toDo = (ToDo) o;
+        return id == toDo.id && isCompleted == toDo.isCompleted && Objects.equals(text, toDo.text);
+    }
 
 }

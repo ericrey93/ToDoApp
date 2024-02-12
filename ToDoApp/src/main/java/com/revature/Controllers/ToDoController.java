@@ -1,7 +1,10 @@
 package com.revature.Controllers;
 
+import com.revature.DAOS.UserDao;
 import com.revature.Models.ToDo;
+import com.revature.Models.Users;
 import com.revature.Services.ToDoServices;
+import com.revature.Services.UserServices;
 import org.aspectj.apache.bcel.classfile.Module;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +20,41 @@ import java.util.Optional;
 public class ToDoController {
 
 
-    private ToDoServices tds;
+    private final ToDoServices tds;
+    private final UserServices uss;
 
     @Autowired
-    public ToDoController(ToDoServices tds) {
+    public ToDoController(ToDoServices tds, UserServices uss, UserDao userDao) {
         this.tds = tds;
+        this.uss = uss;
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody Users user) {
+        Users newUser = uss.registerUser(user);
+        if(newUser != null) {
+            return ResponseEntity.status(HttpStatus.OK).body(newUser);
+        } else {
+            Users checkAcc = uss.findByUsername(user.getUsername());
+            if(checkAcc != null) {
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Account Exists.");
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+        }
+    } @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody Users users) {
+        Users checkAcc = uss.findByUsername(users.getUsername());
+        if(checkAcc != null && checkAcc.getPassword().equals(users.getPassword())) {
+            return ResponseEntity.status(HttpStatus.OK).body(checkAcc);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username and/or password");
+        }
+    }
+
+
+
+
 
     @GetMapping("/todos")
     public ResponseEntity<List<ToDo>> getAllToDos() {
@@ -33,7 +65,7 @@ public class ToDoController {
 
 
     @PostMapping("/todos")
-    public ResponseEntity<?> createToDoHandler(@RequestBody ToDo todo) {
+    public ResponseEntity<?> createToDos(@RequestBody ToDo todo) {
         ToDo createToDo = tds.createNewToDo(todo);
         if(createToDo != null) {
             return ResponseEntity.status(200).body(createToDo);
@@ -42,6 +74,8 @@ public class ToDoController {
         }
 
     }
+
+
 
 
     @GetMapping("/todos/{id}")
@@ -75,4 +109,5 @@ public class ToDoController {
         ToDo deleteToDo = tds.deleteToDoById(id);
         return ResponseEntity.status(200).body("Todo Deleted!");
     }
+
 }

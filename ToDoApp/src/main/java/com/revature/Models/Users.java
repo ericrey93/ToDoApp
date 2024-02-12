@@ -20,6 +20,12 @@ public class Users {
 
     }
 
+    public Users(int user_id, String username, String password) {
+        this.user_id = user_id;
+        this.username = username;
+        this.password = password;
+    }
+
     public Integer getUser_id() {
         return user_id;
     }
